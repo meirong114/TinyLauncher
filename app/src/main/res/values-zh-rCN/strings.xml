@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tiny Launcher</string>
+    <string name="version">1.2</string>
+    <string name="launcher_name">TLauncher</string>
+    <string name="app_settings">TLauncher设置</string>
+</resources>

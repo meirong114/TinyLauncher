@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:padding="16dp">
+
+	<Button
+		android:id="@+id/activateDeviceAdminButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="激活设备管理器"/>
+
+	<Button
+		android:id="@+id/clearDataButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="清除桌面数据"/>
+
+	<Button
+		android:id="@+id/restartLauncherButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="重启桌面"/>
+
+	<Button
+		android:id="@+id/launchSystemSettingsButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="启动原生系统设置"/>
+
+	<Button
+		android:id="@+id/openDeveloperOptionsButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="打开开发者模式"/>
+
+	<Button
+		android:id="@+id/enableNetworkAdbButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="启用无线调试"/>
+
+</LinearLayout>
+

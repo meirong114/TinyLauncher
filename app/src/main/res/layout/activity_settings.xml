@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:padding="16dp">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="当前版本 Version:"
+		android:textSize="18sp"/>
+
+	<TextView
+		android:id="@+id/versionTextView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/version"
+		android:textSize="18sp"/>
+
+	<Button
+		android:id="@+id/licenseButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="查看开源许可证"/>
+
+	<Button
+		android:id="@+id/startAppBtn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="刷新桌面"/>
+
+	<Button
+		android:id="@+id/devBtn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="开发者模式(还没整好)"/>
+
+	<Button
+		android:id="@+id/appInfoBtn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="管理本应用"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="返回桌面"
+		android:id="@+id/backToLauncher"/>
+
+	<Button
+		android:id="@+id/exitBtn"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="退出应用"/>
+
+</LinearLayout>
+

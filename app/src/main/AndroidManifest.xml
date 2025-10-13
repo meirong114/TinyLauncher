@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='utf-8'?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:sharedUserId="minesms.app"
+    package="com.minesms.launcher3"
+    android:versionName="1.2">
+
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+
+    <uses-permission android:name="android.permission.UWB_RANGING"/>
+
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.REBOOT"/>
+
+    <uses-permission android:name="android.permission.UPDATE_PACKAGES_WITHOUT_USER_ACTION"/>
+
+    <uses-permission android:name="android.permission.ACCESS_BLOBS_ACROSS_USERS"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+    <uses-permission android:name="android.permission.MANAGE_WIFI_INTERFACES"/>
+
+    <uses-permission android:name="android.permission.MANAGE_WIFI_NETWORK_SELECTION"/>
+
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"/>
+
+    <uses-permission android:name="android.permission.OVERRIDE_WIFI_CONFIG"/>
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_APPWIDGET"/>
+
+    <uses-permission android:name="android.permission.BIND_AUTOFILL_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_CALL_REDIRECTION_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_CARRIER_MESSAGING_CLIENT_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_CARRIER_MESSAGING_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_CARRIER_SERVICES"/>
+
+    <uses-permission android:name="android.permission.BIND_CHOOSER_TARGET_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_WALLPAPER"/>
+
+    <uses-permission android:name="android.permission.BIND_VR_LISTENER_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_VPN_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_VOICE_INTERACTION"/>
+
+    <uses-permission android:name="android.permission.BIND_TV_INTERACTIVE_APP"/>
+
+    <uses-permission android:name="android.permission.BIND_TV_INPUT"/>
+
+    <uses-permission android:name="android.permission.BIND_TEXT_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_VISUAL_VOICEMAIL_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_TELECOM_CONNECTION_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_SCREENING_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_REMOTEVIEWS"/>
+
+    <uses-permission android:name="android.permission.BIND_QUICK_SETTINGS_TILE"/>
+
+    <uses-permission android:name="android.permission.BIND_QUICK_ACCESS_WALLET_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_PRINT_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_NFC_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_INCALL_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_INPUT_METHOD"/>
+
+    <uses-permission android:name="android.permission.BIND_MIDI_DEVICE_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_DREAM_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN"/>
+
+    <uses-permission android:name="android.permission.BIND_CONTROLS"/>
+
+    <uses-permission android:name="android.permission.BIND_CONDITION_PROVIDER_SERVICE"/>
+
+    <uses-permission android:name="android.permission.BIND_COMPANION_DEVICE_SERVICE"/>
+
+    <uses-permission android:name="android.permission.WRITE_GSERVICES"/>
+
+    <uses-permission android:name="android.permission.START_FOREGROUND_SERVICES_FROM_BACKGROUND"/>
+
+    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
+
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_START_FOREGROUND_SERVICES_FROM_BACKGROUND"/>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="10"
+        android:maxSdkVersion="10"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:resizeableActivity="true">
+
+        <activity
+            android:name="Launcher"
+            android:icon="@drawable/icon"
+            android:label="@string/launcher_name">
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.HOME"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.MONKEY"/>
+
+            </intent-filter>
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+
+        </activity>
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="4.0"/>
+
+        <activity
+            android:name="com.android.launcher3.SecondaryDisplayLauncher"
+            android:label="@string/app_name"
+            android:exported="false"/>
+
+        <activity
+            android:name=".EmptyActivity"
+            android:label=" "/>
+
+        <activity
+            android:name="AppSettings"
+            android:label="@string/app_settings"
+            android:icon="@drawable/icon_settings"
+            android:exported="true">
+
+            <intent-filter>
+
+                <action android:name="com.minesms.launcher3.action.SETTINGS"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name="MainActivity"
+            android:label=" "
+            android:theme="@android:style/Theme.NoTitleBar"/>
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="4.0"/>
+
+        <activity
+            android:name=".License"
+            android:label="开源许可证"
+            android:exported="true"/>
+
+        <service
+            android:name=".NotificationKeepService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <activity
+            android:exported="true"
+            android:icon="@drawable/icon"
+            android:label="@string/app_settings"
+            android:name="com.minesms.launcher3.ui.ManageApplication"
+            android:launchMode="standard">
+
+        </activity>
+
+        <receiver
+            android:name="DPMReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin"/>
+
+            <intent-filter>
+
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+
+                <action android:name="android.app.action.DEVICE_ADMIN_DISABLE_REQUESTED"/>
+
+                <action android:name="android.app.action.DEVICE_ADMIN_DISABLED"/>
+
+            </intent-filter>
+
+        </receiver>
+
+        <service android:name="com.minesms.launcher3.KeepOnService"/>
+
+        <activity
+            android:label="@string/app_settings"
+            android:name="com.minesms.launcher3.Settings"/>
+
+        <activity
+            android:name=".DevelopSet"
+            android:label="@string/app_settings">
+            <intent-filter>
+                <action android:name="com.minesms.launcher3.DEVSET"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

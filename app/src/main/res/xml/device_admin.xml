@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="TLauncher防卸载">
+    <uses-policies>
+        <limit-password /> <!-- 限制密码 -->
+        <watch-login /> <!-- 监控登录尝试 -->
+        <force-lock /> <!-- 锁定设备 -->
+        <expire-password /> <!-- 设置密码过期 -->
+        <reset-password /> <!-- 重置密码 -->
+        <wipe-data /> <!-- 擦除数据 -->
+        <disable-camera /> <!-- 禁用相机 -->
+        <set-keyguard-disabled-features /> <!-- 设置屏幕锁定超时 -->
+        <set-global-proxy /> <!-- 设置VPN -->
+        <install-existing-package /> <!-- 安装应用 -->
+        <uninstall-package /> <!-- 卸载应用 -->
+        <disable-keyguard-features /> <!-- 禁用应用 -->
+    </uses-policies>
+</device-admin>
