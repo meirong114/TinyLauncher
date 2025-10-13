@@ -10,8 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.content.Intent;
 import android.net.Uri;
+import java.net.URL;
+import java.net.HttpURLConnection;
+import java.io.IOException;
 
 public class Settings extends Activity {
+    private static final String UPDATE_CLEAR_URL = "https://purge.jsdelivr.net/gh/meirong114/TinyLauncher@latest/update.json";
     private long firstBackTime;
     @Override
     public void onBackPressed() {
@@ -86,6 +90,25 @@ public class Settings extends Activity {
                 public void onClick(View v) {
                     Intent intentDev = new Intent("com.minesms.launcher3.DEVSET");
                     startActivity(intentDev);
+                    
+                }
+                
+            
+        });
+        
+        Button clearUpdateCache = findViewById(R.id.clearUpdateCache);
+        clearUpdateCache.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //URL clearUrl = new URL(UPDATE_CLEAR_URL);
+                    try {
+                        URL clearUrl = new URL(UPDATE_CLEAR_URL);
+                        HttpURLConnection clearConnection = (HttpURLConnection) clearUrl.openConnection();
+                        clearConnection.setRequestMethod("GET");
+                        clearConnection.setConnectTimeout(5000);
+                        clearConnection.setReadTimeout(5000);
+                    } catch (IOException e) {}
                     
                 }
                 

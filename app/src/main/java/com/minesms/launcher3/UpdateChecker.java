@@ -47,11 +47,15 @@ public class UpdateChecker {
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
                 
+                /*
+                
                 URL clearUrl = new URL(UPDATE_CLEAR_URL);
                 HttpURLConnection clearConnection = (HttpURLConnection) clearUrl.openConnection();
                 clearConnection.setRequestMethod("GET");
                 clearConnection.setConnectTimeout(5000);
                 clearConnection.setReadTimeout(5000);
+                
+                */
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {

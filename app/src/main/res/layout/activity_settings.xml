@@ -35,7 +35,13 @@
 		android:id="@+id/devBtn"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="开发者模式(还没整好)"/>
+		android:text="开发者模式"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="清理更新缓存"
+		android:id="@+id/clearUpdateCache"/>
 
 	<Button
 		android:id="@+id/appInfoBtn"
