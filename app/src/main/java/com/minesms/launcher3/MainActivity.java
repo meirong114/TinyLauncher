@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import com.minesms.launcher3.UpdateChecker;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,12 +32,19 @@ import android.view.LayoutInflater;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.webkit.WebView;
+import android.Manifest;
 
 public class MainActivity extends Activity {
     private GridView gridView;
     private List<ResolveInfo> apps;
     private PackageManager pm;
     private List<HashMap<String, Object>> originalData = new ArrayList<>();
+
+    private static final int REQUEST_CODE_MEDIA_PERMISSIONS = 0;
+
+    private int REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION;
+
+    //private static final int REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,18 @@ public class MainActivity extends Activity {
         try {
             Runtime.getRuntime().exec("su");
         } catch (IOException e) {}
+        
+        String[] permissions_media = {
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_VIDEO,
+            Manifest.permission.READ_MEDIA_AUDIO
+        };
+        //requestPermissions(permissions_media, REQUEST_CODE_MEDIA_PERMISSIONS);
+
+        String[] permissions_noMedia = {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        };
+        requestPermissions(permissions_noMedia, REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION);
 
         // 设置墙纸为背景
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
@@ -150,7 +170,7 @@ public class MainActivity extends Activity {
 
         icon.setImageDrawable(getResources().getDrawable(R.drawable.icon));
         name.setText(getString(R.string.app_name));
-        copyright.setText("Copyright 2025 Whirity404");
+        copyright.setText("Copyright 2018-2099 Whirity404");
 
         // 添加点击事件监听器
         icon.setOnClickListener(new View.OnClickListener() {
@@ -191,17 +211,16 @@ public class MainActivity extends Activity {
             .show();
     }
     
+    public void checkUpdTxt(View view) {
+        new UpdateChecker(MainActivity.this).checkForUpdate();
+    }
+    
     public void onIconClick(View view) {
         showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
-        showSettingsDialog();
+    }
+    
+    public void onNameClick(View view) {
+        new UpdateChecker(MainActivity.this).checkForUpdate();
     }
 
     @Override
@@ -212,6 +231,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onLowMemory() {
+        new UpdateChecker(MainActivity.this).checkForUpdate();
         finishAffinity();
         super.onLowMemory();
     }

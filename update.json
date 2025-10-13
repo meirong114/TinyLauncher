@@ -1,7 +1,7 @@
 {
-  "version": "1.2.1",
-  "title": "更新1.2.1",
-  "content": "修复UI细节错误",
+  "version": "1.2.2",
+  "title": "更新1.2.2",
+  "content": "修改关于页面的详情\n添加OTA更新\n修复OTA导致的权限问题\n其他性能优化\n\n我们准备操小米",
   "downloadUrl": "https://github.com/meirong114/TinyLauncher/",
   "forceUpd": false
 }

@@ -25,7 +25,7 @@
 			android:layout_height="wrap_content"
 			android:textSize="16sp"
 			android:textStyle="bold"
-			android:onClick="onIconClick"/>
+			android:onClick="onNameClick"/>
 
 		<TextView
 			android:id="@+id/dialog_copyright"
@@ -33,6 +33,13 @@
 			android:layout_height="wrap_content"
 			android:textSize="12sp"
 			android:onClick="onCopyrightClick"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="检查更新"
+			android:id="@+id/checkUpdate"
+			android:onClick="checkUpdTxt"/>
 
 	</LinearLayout>
 
