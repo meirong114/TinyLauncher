@@ -1,7 +1,7 @@
 {
-  "version": "1.2.3",
-  "title": "更新1.2.3",
-  "content": "添加详情ui的全景声效",
+  "version": "1.2.4",
+  "title": "更新1.2.4",
+  "content": "添加关于界面\n请加明日方舟好友:Whirity404#8822，谢谢喵",
   "downloadUrl": "https://github.com/meirong114/TinyLauncher/",
-  "forceUpd": false
+  "forceUpd": true
 }

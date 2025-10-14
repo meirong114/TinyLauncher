@@ -58,6 +58,17 @@ public class AboutActivity extends Activity {
                     openGitHub();
                 }
             });
+            
+        Button btnUpdate = findViewById(R.id.btnUpdate);
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    openUpdate();
+                }
+                
+            
+        });
 
         // 版权文本点击事件（3次点击）
         copyrightText.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +142,12 @@ public class AboutActivity extends Activity {
         } catch (Exception e) {
             Toast.makeText(this, "无法打开GitHub", Toast.LENGTH_SHORT).show();
         }
+    }
+    
+    private void openUpdate() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://github.com/meirong114/TinyLauncher/releases"));
+        startActivity(intent);
     }
 
     private void showHypergryphDialog() {
