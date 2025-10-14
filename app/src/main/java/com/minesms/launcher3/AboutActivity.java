@@ -140,7 +140,7 @@ public class AboutActivity extends Activity {
 
         // 获取WebView并加载图片
         WebView webView = dialog.findViewById(R.id.hypergryphWebView);
-        String imageUrl = "https://fastly.jsdelivr.net/gh/meirong114/TinyLauncher/hypergryph.png";
+        String imageUrl = "https://meirong114.github.io/TinyLauncher/hypergryph.png";
 
         // 创建HTML内容显示图片
         String htmlContent = "<html><body style='margin:0;padding:0;text-align:center;'>" +
