@@ -42,5 +42,17 @@
 		android:layout_height="wrap_content"
 		android:text="启用无线调试"/>
 
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="开始抓取日志"
+		android:id="@+id/startLogcat"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="停止抓取日志"
+		android:id="@+id/stopLogcat"/>
+
 </LinearLayout>
 

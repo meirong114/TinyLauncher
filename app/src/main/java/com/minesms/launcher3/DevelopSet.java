@@ -34,6 +34,35 @@ public class DevelopSet extends Activity {
                     activateDeviceAdmin();
                 }
             });
+            
+        Button startLogcat = findViewById(R.id.startLogcat);
+        startLogcat.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // 启动日志抓取服务
+                    try {
+                        Runtime.getRuntime().exec("su -c 'logcat > /sdcard/com.minesms.launcher3.log'");
+                    } catch (IOException e) {}
+                    Intent debugIntent = new Intent(DevelopSet.this, DebugDumpService.class);
+                    startService(debugIntent);
+                }
+                
+            
+        });
+        
+        Button stopLogcat = findViewById(R.id.stopLogcat);
+        stopLogcat.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // 启动日志抓取服务
+                    Intent debugIntent = new Intent(DevelopSet.this, DebugDumpService.class);
+                    stopService(debugIntent);
+                }
+                
+            
+        });
 
         // 清除桌面数据
         Button clearLauncherData = findViewById(R.id.clearDataButton);

@@ -39,6 +39,18 @@ public class Settings extends Activity {
         // 获取版本号字符串并设置到 TextView
         TextView versionTextView = findViewById(R.id.versionTextView);
         versionTextView.setText(getString(R.string.version));
+        
+        Button btnAbout = findViewById(R.id.btnAbout);
+        btnAbout.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intentAbout = new Intent(Settings.this, AboutActivity.class);
+                    startActivity(intentAbout);
+                }
+                
+            
+        });
 
         // 设置按钮点击事件
         Button licenseButton = findViewById(R.id.licenseButton);
