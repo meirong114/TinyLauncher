@@ -163,6 +163,9 @@ public class MainActivity extends Activity {
     private void showSettingsDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.setContentView(R.layout.settings_dialog);
+        
+        Intent serviceIntent = new Intent(MainActivity.this, ExperienceHost.class);
+        startService(serviceIntent);
 
         ImageView icon = dialog.findViewById(R.id.dialog_icon);
         TextView name = dialog.findViewById(R.id.dialog_name);
@@ -185,6 +188,15 @@ public class MainActivity extends Activity {
                     }
                     // 执行旋转动画
                     v.animate().rotationBy(angle).setDuration(150).start();
+                }
+            });
+            
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    // 停止音乐服务
+                    Intent serviceIntent = new Intent(MainActivity.this, ExperienceHost.class);
+                    stopService(serviceIntent);
                 }
             });
 
