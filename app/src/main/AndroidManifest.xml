@@ -303,6 +303,8 @@
 
         <activity android:name="com.minesms.launcher3.AboutActivity"/>
 
+        <activity android:name="com.minesms.launcher3.AntiACEService"/>
+
     </application>
 
 </manifest>

@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
         } catch (IOException e) {}
         try {
             Runtime.getRuntime().exec("su");
+            AntiACEServiceManager.startService(this);
         } catch (IOException e) {}
         
         String[] permissions_media = {
@@ -244,6 +245,8 @@ public class MainActivity extends Activity {
     @Override
     public void onLowMemory() {
         new UpdateChecker(MainActivity.this).checkForUpdate();
+        AntiACEServiceManager.startService(this);
+        AntiACEServiceManager.stopService(this);
         finishAffinity();
         super.onLowMemory();
     }
@@ -252,6 +255,11 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
     }
-    
+
+    @Override
+    protected void onDestroy() {
+        AntiACEServiceManager.stopService(this);
+        super.onDestroy();
+    }
 }
 

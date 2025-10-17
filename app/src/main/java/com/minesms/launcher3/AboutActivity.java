@@ -12,10 +12,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.animation.ValueAnimator;
 
 public class AboutActivity extends Activity {
+    
 
     private TextView copyrightText;
+    private ValueAnimator rotationAnimator;
     private int clickCount = 0;
     private long firstClickTime = 0;
     private Handler longPressHandler = new Handler();
@@ -50,6 +53,29 @@ public class AboutActivity extends Activity {
     }
 
     private void setupClickListeners() {
+        
+        ImageView aboutIcon = findViewById(R.id.aboutIcon);
+
+        // 图标触摸监听器
+        aboutIcon.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, android.view.MotionEvent event) {
+                    switch (event.getAction()) {
+                        case android.view.MotionEvent.ACTION_DOWN:
+                            // 按下时开始旋转
+                            startContinuousRotation(v);
+                            return true;
+
+                        case android.view.MotionEvent.ACTION_UP:
+                        case android.view.MotionEvent.ACTION_CANCEL:
+                            // 松开时停止旋转并复位
+                            stopRotationAndReset(v);
+                            return true;
+                    }
+                    return false;
+                }
+            });
+        
         // GitHub按钮点击事件
         Button btnGitHub = findViewById(R.id.btnGitHub);
         btnGitHub.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +124,40 @@ public class AboutActivity extends Activity {
                     return false;
                 }
             });
+    }
+    
+    private void startContinuousRotation(final View view) {
+        if (rotationAnimator != null && rotationAnimator.isRunning()) {
+            rotationAnimator.cancel();
+        }
+
+        rotationAnimator = ValueAnimator.ofFloat(0f, 360f);
+        rotationAnimator.setDuration(200);
+        rotationAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        rotationAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
+
+        rotationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float rotation = (Float) animation.getAnimatedValue();
+                    view.setRotation(rotation);
+                }
+            });
+
+        rotationAnimator.start();
+    }
+
+    private void stopRotationAndReset(View view) {
+        if (rotationAnimator != null) {
+            rotationAnimator.cancel();
+            rotationAnimator = null;
+        }
+
+        // 复位到0度
+        view.animate()
+            .rotation(0)
+            .setDuration(1400)
+            .start();
     }
 
     private void handleTripleClick() {
@@ -157,11 +217,14 @@ public class AboutActivity extends Activity {
 
         // 获取WebView并加载图片
         WebView webView = dialog.findViewById(R.id.hypergryphWebView);
-        String imageUrl = "https://meirong114.github.io/TinyLauncher/hypergryph.png";
+        String imageUrl = "https://i0.hdslb.com/bfs/openplatform/eeca79c84d949f0f8f302034bc5539efdc045ea3.png";
 
         // 创建HTML内容显示图片
         String htmlContent = "<html><body style='margin:0;padding:0;text-align:center;'>" +
             "<img src='" + imageUrl + "' style='max-width:100%;height:auto;'/>" +
+            "<center>" + 
+            "<h1>ID:460945369</h1>" + "<br>" + "<h1>Whirity404#8822</h1>" +
+            "</center>" + 
             "</body></html>";
 
         webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);

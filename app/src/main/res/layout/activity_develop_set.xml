@@ -31,6 +31,12 @@
 		android:text="启动原生系统设置"/>
 
 	<Button
+		android:id="@+id/launchTestSettingsButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="启动测试菜单"/>
+
+	<Button
 		android:id="@+id/openDeveloperOptionsButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -46,7 +52,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="开始抓取日志"
-		android:id="@+id/startLogcat"/>
+		android:id="@+id/startLogcat"
+		style="@style/AppTheme"/>
 
 	<Button
 		android:layout_width="wrap_content"

@@ -35,6 +35,22 @@ public class DevelopSet extends Activity {
                 }
             });
             
+        Button testMenu = findViewById(R.id.launchTestSettingsButton);
+        testMenu.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    try {
+                        Runtime.getRuntime().exec("su -c 'am start -n com.android.settings/.TestingSettingsActivity'");
+                        Toast.makeText(getApplication(), "com.android.settings/.TestingSettingsActivity", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(getApplication(), "" + e, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                
+            
+        });
+            
         Button startLogcat = findViewById(R.id.startLogcat);
         startLogcat.setOnClickListener(new View.OnClickListener() {
 
@@ -132,11 +148,17 @@ public class DevelopSet extends Activity {
     if (exitCode == 0) {
     Toast.makeText(this, "Desktop data cleared", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Failed to clear data \n " + exitCode, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + exitCode, Toast.LENGTH_SHORT).show();
+            
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to clear data \n " + e, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + e, Toast.LENGTH_SHORT).show();
+            try {
+                Runtime.getRuntime().exec("su -c 'pm clear com.minesms.launcher3'");
+            } catch (IOException f) {
+                Toast.makeText(getApplication(), "" + f, Toast.LENGTH_SHORT).show();
+            }
         }
     }
     
@@ -147,7 +169,7 @@ public class DevelopSet extends Activity {
             Toast.makeText(this, "Desktop restarted", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Failed to restart" + e, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + e, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -157,13 +179,13 @@ public class DevelopSet extends Activity {
             intent.setClassName("com.android.settings", "com.android.settings.SubSettings");
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, "Failed to open system settings" + "\n\n" + e + "(e)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + e + "(e)", Toast.LENGTH_SHORT).show();
             try {
                 Intent intent = new Intent();
                 intent.setClassName("com.android.settings", "com.android.settings.SubSettings");
                 startActivity(intent);
             } catch (Exception f) {
-                Toast.makeText(this, "Failed to open system settings" + "\n\n" + f + "(f)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "" + f + "(f)", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -173,7 +195,7 @@ public class DevelopSet extends Activity {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, "Failed to open developer options" + "\n\n" + e, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + e, Toast.LENGTH_SHORT).show();
         }
     }
 

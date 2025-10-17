@@ -22,6 +22,8 @@ public class Launcher extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher); // 设置布局文件
         
+        AntiACEServiceManager.startService(this);
+        
         String[] permissions_media = {
             Manifest.permission.READ_MEDIA_IMAGES,
             Manifest.permission.READ_MEDIA_VIDEO,
