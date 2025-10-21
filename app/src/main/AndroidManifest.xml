@@ -161,11 +161,6 @@
 
     <uses-permission android:name="com.android.voicemail.permission.READ_VOICEMAIL"/>
 
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="10"
-        android:maxSdkVersion="10"/>
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -304,6 +299,14 @@
         <activity android:name="com.minesms.launcher3.AboutActivity"/>
 
         <activity android:name="com.minesms.launcher3.AntiACEService"/>
+            
+        <meta-data 
+            android:name="app_description_title"
+            android:resource="@string/uninstall_title"/>
+        
+        <meta-data 
+            android:name="app_description_content"
+            android:resource="@string/uninstall_content"/>
 
     </application>
 

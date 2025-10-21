@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tiny Launcher</string>
-    <string name="version">1.2</string>
+    <string name="version">1.2.5</string>
     <string name="launcher_name">TLauncher</string>
-    <string name="app_settings">TLauncher设置</string>
+    <string name="app_settings">TLauncher 设置</string>
+    <string name="uninstall_title">⚡你⚡卸⚡你⚡大⚡坝⚡</string>
+    <string name="uninstall_content">\n\n\n\n\n\n想举报我？没门！\n举报你大坝！！！\n\n\n\n\n\n</string>
 </resources>
