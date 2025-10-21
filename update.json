@@ -1,7 +1,7 @@
 {
-  "version": "1.2.4",
-  "title": "更新1.2.4",
-  "content": "添加关于界面\n请加明日方舟好友:Whirity404#8822，谢谢喵",
+  "version": "1.2.5",
+  "title": "更新1.2.5",
+  "content": "添加小米卸载器的卸载提示（如果禁用了系统优化那么就忽略这个）\n加明日方舟好友:Whirity404#8822，谢谢喵",
   "downloadUrl": "https://github.com/meirong114/TinyLauncher/",
   "forceUpd": true
 }
