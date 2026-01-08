@@ -13,6 +13,7 @@ import android.net.Uri;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.io.IOException;
+import android.widget.Toast;
 
 public class Settings extends Activity {
     private static final String UPDATE_CLEAR_URL = "https://purge.jsdelivr.net/gh/meirong114/TinyLauncher@latest/update.json";
@@ -29,12 +30,20 @@ public class Settings extends Activity {
         super.onBackPressed();
         finish();
     }
+    
+    
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        
+        try {
+            Runtime.getRuntime().exec(getFilesDir().getAbsolutePath() + "/rish");
+        } catch (IOException e) {
+            Toast.makeText(getApplication(), "无法执行 rish: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         // 获取版本号字符串并设置到 TextView
         TextView versionTextView = findViewById(R.id.versionTextView);

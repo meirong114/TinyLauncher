@@ -33,6 +33,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.webkit.WebView;
 import android.Manifest;
+import java.io.InputStream;
+import java.io.File;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
 
 public class MainActivity extends Activity {
     private GridView gridView;
@@ -45,10 +49,55 @@ public class MainActivity extends Activity {
     private int REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION;
 
     //private static final int REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION = 0;
+    private void copyRishFromAssets() {
+        try {
+            // 复制 rish 文件
+            InputStream in = getAssets().open("rish");
+            File outFile = new File(getFilesDir(), "rish");
+            OutputStream out = new FileOutputStream(outFile);
 
+            byte[] buffer = new byte[1024];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            out.close();
+            in.close();
+
+            // 设置文件权限为可执行
+            outFile.setExecutable(true);
+
+            // 复制 rish_shizuku.dex 文件
+            in = getAssets().open("rish_shizuku.dex");
+            outFile = new File(getFilesDir(), "rish_shizuku.dex");
+            out = new FileOutputStream(outFile);
+
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            out.close();
+            in.close();
+
+            // 设置文件权限为可读
+            outFile.setReadable(true);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "无法复制 rish 或 rish_shizuku.dex 文件: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        copyRishFromAssets();
+
+        try {
+            Runtime.getRuntime().exec(getFilesDir().getAbsolutePath() + "/rish");
+        } catch (IOException e) {
+            Toast.makeText(getApplication(), "无法执行 rish: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         try {
             Runtime.getRuntime().exec("su");

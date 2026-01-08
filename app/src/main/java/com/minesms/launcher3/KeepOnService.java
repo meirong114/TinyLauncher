@@ -22,7 +22,7 @@ public class KeepOnService extends Service {
         floatingView = LayoutInflater.from(this).inflate(R.layout.floating_window, null);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-            20, 20,  // 设置悬浮窗的宽高为 200dp x 200dp
+            20, 20,  // 设置悬浮窗的宽高为 20dp x 20dp
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY : WindowManager.LayoutParams.TYPE_PHONE,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT);
