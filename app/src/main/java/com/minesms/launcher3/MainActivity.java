@@ -37,16 +37,27 @@ import java.io.InputStream;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+import android.os.Handler;
+import android.util.Log;
+import android.graphics.Color;
+import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 public class MainActivity extends Activity {
     private GridView gridView;
     private List<ResolveInfo> apps;
     private PackageManager pm;
     private List<HashMap<String, Object>> originalData = new ArrayList<>();
+    private AppMonitorService appMonitorService;
+    private boolean isServiceBound = false;
+    private SimpleAdapter adapter;
 
     private static final int REQUEST_CODE_MEDIA_PERMISSIONS = 0;
 
     private int REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION;
+
+    private String TAG = "MainActivity";
 
     //private static final int REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION = 0;
     private void copyRishFromAssets() {
@@ -91,6 +102,28 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        final boolean isWSA = WSADetector.isWSA(this);
+        final String detectedApp = WSADetector.getDetectedWSAApp(this);
+
+        Log.d(TAG, "WSA环境检测结果: " + isWSA);
+        Log.d(TAG, "检测到的应用: " + detectedApp);
+        
+        if (isWSA) {
+            Thread wallpaperThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(500); // 稍微延迟确保系统稳定
+                            boolean success = WallpaperHelper.setBlackWallpaper(MainActivity.this);
+                            Log.d(TAG, "WSA壁纸预处理: " + (success ? "成功" : "失败"));
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            wallpaperThread.start();
+        }
+        
         copyRishFromAssets();
 
         try {
@@ -120,9 +153,13 @@ public class MainActivity extends Activity {
         requestPermissions(permissions_noMedia, REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION);
 
         // 设置墙纸为背景
+        /*
         WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         Drawable wallpaperDrawable = wallpaperManager.getDrawable();
         getWindow().setBackgroundDrawable(wallpaperDrawable);
+        */
+        
+        WallpaperHelper.setWindowBackgroundSafely(this, getWindow());
 
         setContentView(R.layout.activity_main);
 
@@ -151,7 +188,7 @@ public class MainActivity extends Activity {
         // 创建适配器
         String[] from = {"icon", "name"};
         int[] to = {R.id.icon, R.id.name};
-        SimpleAdapter adapter = new SimpleAdapter(this, originalData, R.layout.grid_item, from, to);
+        adapter = new SimpleAdapter(this, originalData, R.layout.grid_item, from, to);
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
                 @Override
                 public boolean setViewValue(View view, Object data, String textRepresentation) {
@@ -164,6 +201,8 @@ public class MainActivity extends Activity {
             });
 
         gridView.setAdapter(adapter);
+        
+        startAppMonitorService();
 
         // 设置单击事件
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -209,6 +248,47 @@ public class MainActivity extends Activity {
                 }
             });
     }
+    
+    private void startAppMonitorService() {
+        Intent serviceIntent = new Intent(this, AppMonitorService.class);
+        startService(serviceIntent);
+
+        // 设置应用更新监听器
+        if (appMonitorService != null) {
+            appMonitorService.setAppUpdateListener(new AppMonitorService.AppUpdateListener() {
+                    @Override
+                    public void onAppsUpdated(final List<ResolveInfo> newApps) {
+                        // 在主线程中更新UI
+                        runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateAppList(newApps);
+                                }
+                            });
+                    }
+                });
+        }
+    }
+    
+    private void showWSAInfo() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("WSA环境信息");
+
+        StringBuilder info = new StringBuilder();
+        info.append("环境类型: Windows Subsystem for Android\n");
+        info.append("检测到的应用: ").append(WSADetector.getDetectedWSAApp(this)).append("\n");
+        info.append("壁纸处理: 已拦截（使用黑色背景）\n");
+        info.append("系统稳定性: 已优化");
+
+        builder.setMessage(info.toString());
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        builder.show();
+    }
 
     private void showSettingsDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -223,7 +303,12 @@ public class MainActivity extends Activity {
 
         icon.setImageDrawable(getResources().getDrawable(R.drawable.icon));
         name.setText(getString(R.string.app_name));
-        copyright.setText("Copyright 2018-2099 Whirity404");
+        if (WSADetector.isWSA(this)) {
+            copyright.setText("WSA环境 - " + WSADetector.getDetectedWSAApp(this) + "\n" + "Copyright 2018-2099 Whirity404");
+            copyright.setTextColor(Color.RED);
+        } else {
+            copyright.setText("Copyright 2018-2099 Whirity404");
+        }
 
         // 添加点击事件监听器
         icon.setOnClickListener(new View.OnClickListener() {
@@ -251,6 +336,32 @@ public class MainActivity extends Activity {
             });
 
         dialog.show();
+    }
+    
+    private void updateAppList(List<ResolveInfo> newApps) {
+        // 清空原始数据
+        originalData.clear();
+        apps.clear();
+
+        // 更新应用列表
+        apps.addAll(newApps);
+
+        // 重新准备数据
+        for (ResolveInfo app : apps) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("icon", app.loadIcon(pm));
+            map.put("name", app.loadLabel(pm).toString());
+            originalData.add(map);
+        }
+
+        // 添加设置图标
+        HashMap<String, Object> settingsItem = new HashMap<>();
+        settingsItem.put("icon", getResources().getDrawable(R.drawable.icon_settings));
+        settingsItem.put("name", getString(R.string.app_settings));
+        originalData.add(settingsItem);
+
+        // 通知适配器数据已更改
+        adapter.notifyDataSetChanged();
     }
     
     public void onCopyrightClick(View view) {
@@ -284,17 +395,111 @@ public class MainActivity extends Activity {
     public void onNameClick(View view) {
         new UpdateChecker(MainActivity.this).checkForUpdate();
     }
+    
+    /*
 
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
         startActivity(Intent.createChooser(intent, "选择壁纸"));
     }
+    
+    */
+    
+    @Override
+    public void onBackPressed() {
+        // 显示功能菜单
+        showBackMenu();
+    }
+    
+    private void showBackMenu() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_back_menu);
+
+        ListView listView = dialog.findViewById(R.id.menu_listview);
+        final List<String> menuItems = new ArrayList<>();
+
+        // 只在非WSA环境中添加壁纸选项
+        if (!WSADetector.isWSA(this)) {
+            menuItems.add("更换壁纸");
+        } else {
+            menuItems.add("WSA信息");
+        }
+
+        menuItems.add("系统设置");
+        menuItems.add("桌面设置");
+        menuItems.add("侦错模式");
+        menuItems.add("检查更新");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menuItems) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setTextSize(16);
+                textView.setPadding(32, 32, 32, 32);
+                return view;
+            }
+        };
+
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String item = menuItems.get(position);
+                    if (item.equals("更换壁纸")) {
+                        Intent intent = new Intent(Intent.ACTION_SET_WALLPAPER);
+                        startActivity(Intent.createChooser(intent, "选择壁纸"));
+                    } else if (item.equals("WSA信息")) {
+                        showWSAInfo();
+                    } else if (item.equals("系统设置")) {
+                        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                        startActivity(intent);
+                    } else if (item.equals("桌面设置")) {
+                        Intent settingsIntent = new Intent(MainActivity.this, AppSettings.class);
+                        startActivity(settingsIntent);
+                    } else if (item.equals("侦错模式")) {
+                        // 显示调试信息
+                        showDebugDialog();
+                    } else if (item.equals("检查更新")) {
+                        new UpdateChecker(MainActivity.this).checkForUpdate();
+                    }
+                    dialog.dismiss();
+                }
+            });
+
+        dialog.show();
+    }
+    
+    private void showDebugDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("侦错信息");
+
+        StringBuilder debugInfo = new StringBuilder();
+        debugInfo.append("设备型号: ").append(Build.MODEL).append("\n");
+        debugInfo.append("Android版本: ").append(Build.VERSION.RELEASE).append("\n");
+        debugInfo.append("SDK版本: ").append(Build.VERSION.SDK_INT).append("\n");
+        debugInfo.append("WSA环境: ").append(WSADetector.isWSA(this) ? "是" : "否").append("\n");
+
+        builder.setMessage(debugInfo.toString());
+        builder.setPositiveButton("关闭", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        builder.show();
+    }
 
     @Override
     public void onLowMemory() {
         new UpdateChecker(MainActivity.this).checkForUpdate();
         AntiACEServiceManager.startService(this);
+        Intent serviceIntent = new Intent(this, AppMonitorService.class);
+        stopService(serviceIntent);
+
+        AntiACEServiceManager.stopService(this);
         AntiACEServiceManager.stopService(this);
         finishAffinity();
         super.onLowMemory();
@@ -303,10 +508,27 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (appMonitorService != null) {
+            new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateAppList(getInstalledApps());
+                    }
+                }, 1000);
+        }
+    }
+    
+    private List<ResolveInfo> getInstalledApps() {
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        return pm.queryIntentActivities(intent, 0);
     }
 
     @Override
     protected void onDestroy() {
+        Intent serviceIntent = new Intent(this, AppMonitorService.class);
+        stopService(serviceIntent);
+
         AntiACEServiceManager.stopService(this);
         super.onDestroy();
     }

@@ -96,7 +96,7 @@ public class UpdateChecker {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("网络错误");
             String error = "无法连接到更新服务器，请检查您的网络连接。" + e;
-            builder.setMessage("无法连接到更新服务器，请检查您的网络连接。\n\nErroor:  " + e + "(" + error + ")" + "\n\n\nVersion:" + currentVersionParts);
+            builder.setMessage("无法连接到更新服务器，请检查您的网络连接。\n\nErroor:  " + e + "(" + error + ")" + "\n\n\nVersion:" + currentVersionParts + "\n" + "Canary通道无法检查更新。你可能需要到GitHub检查更新。");
             builder.setPositiveButton("检查网络", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

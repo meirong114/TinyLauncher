@@ -23,6 +23,11 @@
 		android:textStyle="bold"
 		android:layout_marginBottom="32dp"/>
 
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="当前通道：Canary"/>
+
 	<Button
 		android:id="@+id/btnGitHub"
 		android:layout_width="wrap_content"

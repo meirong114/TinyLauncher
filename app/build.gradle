@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
         versionCode 126
-        versionName "1.2.6"
+        versionName "1.2.6-Canary"
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
     }

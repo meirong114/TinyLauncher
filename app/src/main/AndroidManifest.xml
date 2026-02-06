@@ -299,14 +299,16 @@
         <activity android:name="com.minesms.launcher3.AboutActivity"/>
 
         <activity android:name="com.minesms.launcher3.AntiACEService"/>
-            
-        <meta-data 
+
+        <meta-data
             android:name="app_description_title"
             android:resource="@string/uninstall_title"/>
-        
-        <meta-data 
+
+        <meta-data
             android:name="app_description_content"
             android:resource="@string/uninstall_content"/>
+
+        <service android:name="com.minesms.launcher3.AppMonitorService"/>
 
     </application>
 

@@ -20,14 +20,6 @@ public class Settings extends Activity {
     private long firstBackTime;
     @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - firstBackTime > 1) {
-            firstBackTime = System.currentTimeMillis();
-            return;
-            
-        }
-        finishActivity(0);
-        finish();
-        super.onBackPressed();
         finish();
     }
     
