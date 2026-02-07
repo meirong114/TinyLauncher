@@ -2,6 +2,7 @@ package com.minesms.launcher3;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import com.minesms.launcher3.UpdateChecker;
 import com.minesms.launcher3.R;
@@ -30,19 +31,15 @@ public class Launcher extends Activity {
         
         
         AntiACEServiceManager.startService(this);
-        
-        String[] permissions_media = {
-            Manifest.permission.READ_MEDIA_IMAGES,
-            Manifest.permission.READ_MEDIA_VIDEO,
-            Manifest.permission.READ_MEDIA_AUDIO
-        };
-        //requestPermissions(permissions_media, REQUEST_CODE_MEDIA_PERMISSIONS);
+
         
         String[] permissions_noMedia = {
             Manifest.permission.READ_EXTERNAL_STORAGE
         };
-        requestPermissions(permissions_noMedia, REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION);
-        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions_noMedia, REQUEST_CODE_EXTERNAL_STORAGE_PERMISSION);
+        }
+
         new UpdateChecker(Launcher.this).checkForUpdate();
 
         // 跳转到 MainActivity

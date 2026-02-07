@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import android.os.Binder;
 
 public class AppMonitorService extends Service {
     private static final String TAG = "AppMonitorService";
@@ -23,7 +24,22 @@ public class AppMonitorService extends Service {
     private Runnable checkRunnable;
     private PackageManager packageManager;
     private Set<String> currentApps = new HashSet<>();
+    
     private AppUpdateListener appUpdateListener;
+
+    // 添加 Binder 类
+    public class LocalBinder extends Binder {
+        public AppMonitorService getService() {
+            return AppMonitorService.this;
+        }
+    }
+
+    private final IBinder binder = new LocalBinder();
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
 
     public interface AppUpdateListener {
         void onAppsUpdated(List<ResolveInfo> newApps);
@@ -74,10 +90,7 @@ public class AppMonitorService extends Service {
         }
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    
 
     public void setAppUpdateListener(AppUpdateListener listener) {
         this.appUpdateListener = listener;

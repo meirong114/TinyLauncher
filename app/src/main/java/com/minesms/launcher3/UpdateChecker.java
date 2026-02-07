@@ -30,14 +30,19 @@ public class UpdateChecker {
     }
 
     public void checkForUpdate() {
+        // 检查上下文是否有效
+        if (context == null || (context instanceof Activity && ((Activity) context).isFinishing())) {
+            Log.e("UpdateChecker", "Context is invalid or activity is finishing");
+            return;
+        }
         new CheckUpdateTask().execute();
     }
 
     private class CheckUpdateTask extends AsyncTask<Void, Void, String> {
 
-        private Exception e;
+        private Exception exception;
+        private String currentVersion;
 
-        private String currentVersionParts;
         @Override
         protected String doInBackground(Void... voids) {
             try {
@@ -46,16 +51,6 @@ public class UpdateChecker {
                 connection.setRequestMethod("GET");
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
-                
-                /*
-                
-                URL clearUrl = new URL(UPDATE_CLEAR_URL);
-                HttpURLConnection clearConnection = (HttpURLConnection) clearUrl.openConnection();
-                clearConnection.setRequestMethod("GET");
-                clearConnection.setConnectTimeout(5000);
-                clearConnection.setReadTimeout(5000);
-                
-                */
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -70,48 +65,95 @@ public class UpdateChecker {
                 }
             } catch (Exception e) {
                 Log.e("UpdateChecker", "Error checking for update", e);
+                exception = e;
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            // 检查上下文是否仍然有效
+            if (context == null || (context instanceof Activity && ((Activity) context).isFinishing())) {
+                Log.e("UpdateChecker", "Context is invalid, skipping dialog display");
+                return;
+            }
+
             if (result != null) {
                 try {
                     JSONObject updateJson = new JSONObject(result);
                     String latestVersion = updateJson.getString("version");
-                    String currentVersion = getCurrentVersion();
+                    currentVersion = getCurrentVersion();
+
                     if (isNewVersionAvailable(currentVersion, latestVersion)) {
                         showUpdateDialog(updateJson);
+                    } else {
+                        // 显示已是最新版本提示
+                        showNoUpdateDialog();
                     }
                 } catch (Exception e) {
                     Log.e("UpdateChecker", "Error parsing update JSON", e);
-                    showNetworkErrorDialog(e);
+                    showErrorDialog("解析更新信息失败", e);
                 }
             } else {
-                showNetworkErrorDialog(e);
+                showErrorDialog("网络连接失败", exception);
             }
         }
-        private void showNetworkErrorDialog(Exception e) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("网络错误");
-            String error = "无法连接到更新服务器，请检查您的网络连接。" + e;
-            builder.setMessage("无法连接到更新服务器，请检查您的网络连接。\n\nErroor:  " + e + "(" + error + ")" + "\n\n\nVersion:" + currentVersionParts + "\n" + "Canary通道无法检查更新。你可能需要到GitHub检查更新。");
-            builder.setPositiveButton("检查网络", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                        context.startActivity(intent);
+
+        private void showErrorDialog(String title, Exception e) {
+            try {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(title);
+
+                StringBuilder message = new StringBuilder();
+                message.append("当前版本: ").append(getCurrentVersion()).append("\n\n");
+
+                if (e != null) {
+                    String errorMsg = e.getMessage();
+                    if (errorMsg != null && errorMsg.contains("Canary")) {
+                        message.append("Canary通道无法检查更新，请到GitHub查看最新版本。");
+                    } else {
+                        message.append("错误信息: ").append(e.getMessage()).append("\n\n");
+                        message.append("请检查网络连接后重试。");
                     }
-                });
-            builder.setNegativeButton("退出", new DialogInterface.OnClickListener() {
+                } else {
+                    message.append("请检查网络连接后重试。");
+                }
+
+                builder.setMessage(message.toString());
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-            builder.setCancelable(false);
-            builder.show();
+
+                // 只有在Activity未销毁时才显示对话框
+                if (!((Activity) context).isFinishing()) {
+                    builder.show();
+                }
+            } catch (Exception dialogException) {
+                Log.e("UpdateChecker", "Error showing error dialog", dialogException);
+            }
+        }
+
+        private void showNoUpdateDialog() {
+            try {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("检查更新");
+                builder.setMessage("当前已是最新版本: " + getCurrentVersion());
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                if (!((Activity) context).isFinishing()) {
+                    builder.show();
+                }
+            } catch (Exception e) {
+                Log.e("UpdateChecker", "Error showing no update dialog", e);
+            }
         }
     }
 
@@ -121,59 +163,100 @@ public class UpdateChecker {
             return packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("UpdateChecker", "Error getting current version", e);
-            return "1.0.0"; // Default version if error occurs
+            return "1.0.0";
         }
     }
 
     private boolean isNewVersionAvailable(String currentVersion, String latestVersion) {
-        String[] currentVersionParts = currentVersion.split("\\.");
-        String[] latestVersionParts = latestVersion.split("\\.");
+        try {
+            // 清理版本号，移除非数字字符（如 "7-Canary" -> "7"）
+            String cleanCurrent = currentVersion.replaceAll("[^0-9.]", "");
+            String cleanLatest = latestVersion.replaceAll("[^0-9.]", "");
 
-        for (int i = 0; i < Math.max(currentVersionParts.length, latestVersionParts.length); i++) {
-            int currentPart = i < currentVersionParts.length ? Integer.parseInt(currentVersionParts[i]) : 0;
-            int latestPart = i < latestVersionParts.length ? Integer.parseInt(latestVersionParts[i]) : 0;
+            // 如果清理后为空，使用原始版本号
+            if (cleanCurrent.isEmpty()) cleanCurrent = currentVersion;
+            if (cleanLatest.isEmpty()) cleanLatest = latestVersion;
 
-            if (latestPart > currentPart) {
-                return true;
-            } else if (latestPart < currentPart) {
-                return false;
+            String[] currentParts = cleanCurrent.split("\\.");
+            String[] latestParts = cleanLatest.split("\\.");
+
+            int maxLength = Math.max(currentParts.length, latestParts.length);
+
+            for (int i = 0; i < maxLength; i++) {
+                int currentPart = 0;
+                int latestPart = 0;
+
+                // 安全解析每个版本部分
+                if (i < currentParts.length) {
+                    try {
+                        currentPart = Integer.parseInt(currentParts[i]);
+                    } catch (NumberFormatException e) {
+                        currentPart = 0; // 解析失败时设为0
+                    }
+                }
+
+                if (i < latestParts.length) {
+                    try {
+                        latestPart = Integer.parseInt(latestParts[i]);
+                    } catch (NumberFormatException e) {
+                        latestPart = 0; // 解析失败时设为0
+                    }
+                }
+
+                if (latestPart > currentPart) {
+                    return true;
+                } else if (latestPart < currentPart) {
+                    return false;
+                }
             }
+            return false;
+        } catch (Exception e) {
+            Log.e("UpdateChecker", "Error comparing versions: " + currentVersion + " vs " + latestVersion, e);
+            return false; // 比较失败时认为不需要更新
         }
-        return false;
     }
 
     private void showUpdateDialog(final JSONObject updateJson) {
-        String title = updateJson.optString("title", "Update Available");
-        String content = updateJson.optString("content", "A new update is available.");
-        final String downloadUrl = updateJson.optString("downloadUrl", "");
-        final boolean forceUpdate = updateJson.optBoolean("forceUpd", false);
+        try {
+            String title = updateJson.optString("title", "发现新版本");
+            String content = updateJson.optString("content", "有新版本可用，建议更新以获得更好的体验。");
+            final String downloadUrl = updateJson.optString("downloadUrl", "");
+            final boolean forceUpdate = updateJson.optBoolean("forceUpd", false);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(content);
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(title);
+            builder.setMessage(content);
+            builder.setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
-                    context.startActivity(intent);
+                    if (!downloadUrl.isEmpty()) {
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(downloadUrl));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        } catch (Exception e) {
+                            Log.e("UpdateChecker", "Error opening download URL", e);
+                        }
+                    }
                 }
             });
 
-        if (forceUpdate) {
-            builder.setCancelable(false);
-            builder.setNegativeButton(null, null);
-        } else {
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            if (forceUpdate) {
+                builder.setCancelable(false);
+            } else {
+                builder.setNegativeButton("稍后再说", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
+            }
+
+            if (!((Activity) context).isFinishing()) {
+                builder.show();
+            }
+        } catch (Exception e) {
+            Log.e("UpdateChecker", "Error showing update dialog", e);
         }
-
-        builder.show();
     }
-
-    
 }
-

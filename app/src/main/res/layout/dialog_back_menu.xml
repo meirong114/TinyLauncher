@@ -1,27 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:orientation="vertical"
-	android:padding="16dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical"
+			  android:padding="16dp"
+			  android:focusable="true"
+			  android:focusableInTouchMode="true">
 
+	<!-- 搜索框 - 设置默认不可获得焦点 -->
+	<EditText
+			android:id="@+id/search_edittext"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="搜索应用..."
+			android:singleLine="true"
+			android:maxLines="1"
+			android:inputType="text"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:clickable="true"
+			android:padding="12dp"
+			android:background="@drawable/edittext_background"
+			android:textSize="14sp" />
+
+	<!-- 搜索结果容器（默认隐藏） -->
+	<LinearLayout
+			android:id="@+id/search_results_container"
+			android:layout_width="match_parent"
+			android:layout_height="200dp"
+			android:orientation="vertical"
+			android:visibility="gone"
+			android:layout_marginTop="8dp"
+			android:focusable="true"
+			android:focusableInTouchMode="true">
+
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="搜索结果"
+				android:textSize="14sp"
+				android:textStyle="bold"
+				android:padding="8dp"
+				android:background="#f0f0f0" />
+
+		<ListView
+				android:id="@+id/search_results_listview"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:divider="@color/list_divider"
+				android:dividerHeight="1dp" />
+
+	</LinearLayout>
+
+	<!-- 分隔线 -->
+	<View
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="#e0e0e0"
+			android:layout_marginVertical="8dp" />
+
+	<!-- 功能菜单列表 - 设置默认可获得焦点 -->
 	<TextView
-		android:id="@+id/menu_title"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="功能菜单"
-		android:textSize="18sp"
-		android:textStyle="bold"
-		android:gravity="center"
-		android:padding="8dp"/>
+			android:id="@+id/menu_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="功能菜单"
+			android:textSize="18sp"
+			android:textStyle="bold"
+			android:gravity="center"
+			android:padding="8dp"/>
 
 	<ListView
-		android:id="@+id/menu_listview"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="8dp"
-		android:dividerHeight="1dp"/>
+			android:id="@+id/menu_listview"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:maxHeight="300dp"
+			android:divider="@color/list_divider"
+			android:dividerHeight="1dp"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:descendantFocusability="beforeDescendants" />
 
 </LinearLayout>
-

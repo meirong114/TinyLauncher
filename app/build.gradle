@@ -1,21 +1,54 @@
 apply plugin: 'com.android.application'
 
 android {
+    //noinspection GradleDependency
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
+        ndk {
+            // 明确指定支持的 ABI
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86', 'x86_64'
+        }
         applicationId "com.minesms.launcher3"
         minSdkVersion 14
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
-        versionCode 126
-        versionName "1.2.6-Canary"
+        versionCode 127
+        versionName "1.2.7-Canary"
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
     }
 
+    signingConfigs {
+        release {
+            storeFile file("D:\\debug.keystore")
+            storePassword "android"
+            keyAlias "minesms"
+            keyPassword "android"
+        }
+        debug {
+            storeFile file("D:\\debug.keystore")
+            storePassword "android"
+            keyAlias "minesms"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
         release {
+            minifyEnabled false
+            debuggable false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            // 移除以下行或设置为 false
+            // testCoverageEnabled false
+            // 确保没有配置为仅调试
+            signingConfig signingConfigs.debug
+            embedMicroApp = false  // 如果存在此配置
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
